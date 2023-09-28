@@ -1,0 +1,58 @@
+{%extends 'user/home_layout.html'%}
+{% block content %}
+<h1>Thank You For your donation</h1>
+<p>Kindly confirm the following details:</p>
+<div class="mb-3">
+    <label>Donor's Name</label>
+    {{ donation_deets.don_fullname }}
+</div>
+<div class="mb-3">
+<label>Donor's Email</label>
+{{ donation_deets.don_email}}
+</div>
+<div class="mb-3">
+    <label>Donor's Amount</label>
+    {{ donation_deets.don_amt}}
+    </div>
+    <div class="mb-3">
+        <label>Transaction REF</label>
+       <span class="text-danger bg-warning">{{ donation_deets.don_refno }}</span> 
+        </div>
+        <form id="paymentForm">
+            <div class="mb-3">
+                <button  class="btn btn-outline-dark" onclick="payWithPaystack()">Confirm Payment</button>
+            </div>
+        </form>
+        <hr>
+        <h5>Redirect Home</h5>
+        <button class="btn btn-success">Make payment</button>
+{% endblock %}
+
+{% block customjs %}
+<script src="https://js.paystack.co/v1/inline.js"></script>
+<script>
+    const paymentForm = document.getElementById('paymentForm');
+paymentForm.addEventListener("submit", payWithPaystack, false);
+
+function payWithPaystack(e) {
+  e.preventDefault();
+
+  let handler = PaystackPop.setup({
+    key: 'pk_test_38750f75f878c2d5eea91ebf7f2bc729ce304d2f', // Replace with your public key
+    email: "{{donation_deets.don_email}}",
+    amount: "{{ donation_deets.don_amt }}",
+    ref: "{{ donation_deets.don_refno }}", // generates a pseudo-unique reference. Please replace with a reference you generated. Or remove the line entirely so our API will generate one for you
+    // label: "Optional string that replaces customer email"
+    onClose: function(){
+      alert('Window closed.');
+    },
+    callback: function(response){
+      let message = 'Payment complete! Reference: ' + response.reference;
+      alert(message);
+    }
+  });
+
+  handler.openIframe();
+}
+</script>
+{%endblock%}

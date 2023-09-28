@@ -1,0 +1,57 @@
+{% extends "user/home_layout.html"%}
+
+{%block content %}
+<form id="myform">
+<div class="content px-3 py-3">
+<div class="row">
+    <div class="col">
+        <div id="show">
+            {% autoescape false %}
+            {% endautoescape %}
+          </div>
+        {{ cform.email.label}}
+        {{ cform.email(class_='form-control border-success')}}
+    </div>
+    <div class="col">
+        <label style="color: red;">The field is required</label>
+        <br>
+        {{ cform.csrf_token }}
+        {{ cform.button(class_='btn btn-danger noround')}}
+    </div>
+</div>
+</div>
+</form>
+{%endblock%}
+
+{% block customjs %}
+
+<script type="text/javascript">
+$(document).ready(function(){
+    $('#button').click(function(event){
+        event.preventDefault()
+        var myform = document.getElementById('myform')
+        var data2send = $('#myform').serialize()
+        $.ajax({
+            url:"/ajaxopt",
+            type:"POST",
+            data:data2send,
+            error:function(errmsg){
+                console.log(errmsg)
+            },
+            success:function(serverRsp){
+              $('#show').html(serverRsp['message'])
+              
+            },
+            complete:function(){
+                $('#button').val('Subscribe')
+            },
+            beforeSend:function(){
+                $('#button').val('Please wait...')
+            }
+        })
+    })
+})
+
+</script>
+
+{%endblock%}

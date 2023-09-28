@@ -1,0 +1,46 @@
+{% extends "user/home_layout.html"%}
+
+{% block content%}
+<div class="content" style="background-color: aliceblue;padding: 3em;">
+    <button class="btn btn-danger noround">click me</button>
+    <input type="text" class="form-control border-success noround" id="fullname">
+    <button id="m">Submit name </button>
+<div clas="mb-3 border-primary" id="feedback">{{data}}</div>
+<div class="mb-3 border-primary" id="ajaxfeedback">
+</div>
+
+<div class="row">
+    <div class="col">
+        <input type="text" id="email" class="form-control noround border-success">
+    </div>
+    <div class="col">
+        <button id="check" class="btn btn-warning noround" type="button">Check Availability</button>
+    </div>
+    
+</div>
+<div class="col" id="avail"></div>
+</div>
+{%endblock%}
+
+{% block customjs %}
+<script type="text/javascript">
+$(document).ready(function(){
+    $("#m").click(function(){
+        fname = $('#fullname').val()
+        data2send = "Fullname= "+fname
+        $("#ajaxfeedback").load("/submission",data2send)
+    })
+
+    $("#check").click(function(){
+        var email = $("#email").val()
+        var data = "username="+email
+        $('#avail').load("/checkusername/",data, function(){
+        $(this).addClass('alert,alert-info')
+
+        })
+    })
+    
+})
+
+</script>
+{% endblock %}
